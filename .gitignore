@@ -1,0 +1,57 @@
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.*.local
+
+# OS-specific (macOS)
+.DS_Store
+
+# VS Code settings
+.vscode/
+.history/
+
+# Build output
+dist/
+build/
+out/
+coverage/
+
+# Dependency directories (if using these tools)
+jspm_packages/
+bower_components/
+
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temp files
+*.log
+*.tmp
+*.swp
+
+# ESLint cache
+.eslintcache
+
+# Parcel-bundler cache
+.cache/
+
+# Svelte/Vite/Vue/React specific (optional)
+*.svelte-kit
+.svelte-kit/
+vite.config.js
+vite.config.ts
+
+# TypeScript (if using)
+*.tsbuildinfo
+
+# Prettier
+.prettierrc
