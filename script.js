@@ -298,3 +298,9 @@ const prevSlide = function () {
 // Event listeners for next/previous navigation buttons
 btnRight.addEventListener('click', nextSlide);
 btnLeft.addEventListener('click', prevSlide);
+
+// Enable keyboard navigation: go to next/previous slide using arrow keys
+document.addEventListener('keydown', function (event) {
+  event.key === 'ArrowRight' && nextSlide();
+  event.key === 'ArrowLeft' && prevSlide();
+});
