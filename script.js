@@ -18,6 +18,7 @@ const allSections = document.querySelectorAll('.section');
 const slides = document.querySelectorAll('.slide');
 const btnLeft = document.querySelector('.slider__btn--left');
 const btnRight = document.querySelector('.slider__btn--right');
+const dotContainer = document.querySelector('.dots');
 
 ///////////////////////////////////////
 // Modal window
@@ -257,6 +258,27 @@ let currentSlide = 0;
 // Total number of slides - 1 (used to wrap around the last slide)
 const maxSlide = slides.length - 1;
 
+// Dynamically create a dot for each slide and insert it into the dot container
+// Each dot gets a data-slide attribute corresponding to its slide index
+const createDots = function () {
+  slides.forEach((s, i) => {
+    dotContainer.insertAdjacentHTML(
+      'beforeend',
+      `<button class="dots__dot" data-slide="${i}"></button>`
+    );
+  });
+};
+
+const activateDot = function (slide) {
+  document
+    .querySelectorAll('.dots__dot')
+    .forEach(dot => dot.classList.remove('dots__dot--active'));
+
+  document
+    .querySelector(`.dots__dot[data-slide="${slide}"]`)
+    .classList.add('dots__dot--active');
+};
+
 /**
  * goToSlide(slide)
  * Shifts all slides horizontally based on the current slide index.
@@ -274,6 +296,8 @@ const goToSlide = function (slide) {
 
 // Initialize slider to show the first slide
 goToSlide(0);
+createDots();
+activateDot(0);
 
 // Next slide
 const nextSlide = function () {
@@ -283,6 +307,7 @@ const nextSlide = function () {
     currentSlide++;
   }
   goToSlide(currentSlide);
+  activateDot(currentSlide);
 };
 
 // Previous slide
@@ -293,6 +318,7 @@ const prevSlide = function () {
     currentSlide--;
   }
   goToSlide(currentSlide);
+  activateDot(currentSlide);
 };
 
 // Event listeners for next/previous navigation buttons
@@ -303,4 +329,14 @@ btnLeft.addEventListener('click', prevSlide);
 document.addEventListener('keydown', function (event) {
   event.key === 'ArrowRight' && nextSlide();
   event.key === 'ArrowLeft' && prevSlide();
+});
+
+// Event delegation
+dotContainer.addEventListener('click', function (event) {
+  // Matchin strategy
+  if (event.target.classList.contains('dots__dot')) {
+    currentSlide = Number(event.target.dataset.slide);
+    goToSlide(currentSlide);
+    activateDot(currentSlide);
+  }
 });
