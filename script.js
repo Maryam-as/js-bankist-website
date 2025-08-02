@@ -14,6 +14,7 @@ const tabs = document.querySelectorAll('.operations__tab');
 const tabsContent = document.querySelectorAll('.operations__content');
 const nav = document.querySelector('.nav');
 const header = document.querySelector('.header');
+const allSections = document.querySelectorAll('.section');
 
 ///////////////////////////////////////
 // Modal window
@@ -172,3 +173,36 @@ const obsOptions = {
 // Create the observer and observe the header section
 const headerObserver = new IntersectionObserver(stickyNav, obsOptions);
 headerObserver.observe(header);
+
+///////////////////////////////////////
+// Reveal sections
+
+// Callback function for the Intersection Observer
+// It is triggered when a section enters the viewport (based on threshold)
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+
+  // Guard clause: If the section is not intersecting, exit early
+  if (!entry.isIntersecting) {
+    return;
+  }
+
+  // Remove the 'section--hidden' class to reveal the section
+  entry.target.classList.remove('section--hidden');
+
+  // Stop observing the section after it has been revealed
+  observer.unobserve(entry.target);
+};
+
+// Create the Intersection Observer
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null, // Use the viewport as the root
+  threshold: 0.15, // Trigger when 15% of the section is visible
+});
+
+// Add 'section--hidden' class to all sections and observe them
+// They will be revealed when scrolled into view
+allSections.forEach(section => {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+});
