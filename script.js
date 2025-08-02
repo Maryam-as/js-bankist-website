@@ -115,27 +115,28 @@ tabsContainer.addEventListener('click', function (event) {
 // This effect dims the opacity of sibling nav links and logo when one nav link is hovered over,
 // creating a subtle fade animation for better focus/visual feedback.
 
-const handleHover = function (event, opacity) {
+// Generic handler function for both mouseover and mouseout events.
+// The value of `this` will be manually set using bind() to control the target opacity.
+const handleHover = function (event) {
   // Use matching strategy to ensure we're targeting a nav link
   if (event.target.classList.contains('nav__link')) {
     const hoveredLink = event.target;
     const siblings = hoveredLink.closest('.nav').querySelectorAll('.nav__link');
     const logo = hoveredLink.closest('.nav').querySelector('img');
 
-    // Reduce opacity of other links
+    // Apply the bound opacity (this) to all siblings and logo except the hovered link
     siblings.forEach(link => {
       if (link !== hoveredLink) {
-        link.style.opacity = opacity;
+        link.style.opacity = this;
       }
     });
-
-    // Dim the logo
-    logo.style.opacity = opacity;
+    logo.style.opacity = this;
   }
 };
 
 // Event delegation
-nav.addEventListener('mouseover', event => handleHover(event, 0.5));
+// Attach event handlers with bind to dynamically set `this` to the desired opacity value
+nav.addEventListener('mouseover', handleHover.bind(0.5));
 
 // Restore opacity when mouse leaves the link
-nav.addEventListener('mouseout', event => handleHover(event, 1));
+nav.addEventListener('mouseout', handleHover.bind(1));
