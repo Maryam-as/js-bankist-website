@@ -9,6 +9,9 @@ const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.getElementById('section--1');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContent = document.querySelectorAll('.operations__content');
 
 ///////////////////////////////////////
 // Modal window
@@ -74,3 +77,33 @@ document
       document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
     }
   });
+
+///////////////////////////////////////
+// Tabbed component
+
+// Use event delegation to handle tab clicks
+tabsContainer.addEventListener('click', function (event) {
+  // Matching strategy: use closest() to find the actual tab element (in case inner elements are clicked)
+  const clickedTab = event.target.closest('.operations__tab');
+
+  // Guard clause: Exit if no tab was clicked
+  if (!clickedTab) {
+    return;
+  }
+
+  // Remove active state from all tabs
+  tabs.forEach(tab => tab.classList.remove('operations__tab--active'));
+
+  // Activate the clicked tab
+  clickedTab.classList.add('operations__tab--active');
+
+  // Remove active state from all tab content areas
+  tabsContent.forEach(content =>
+    content.classList.remove('operations__content--active')
+  );
+
+  // Activate the corresponding tab content using data-tab attribute
+  document
+    .querySelector(`.operations__content--${clickedTab.dataset.tab}`)
+    .classList.add('operations__content--active');
+});
