@@ -180,18 +180,20 @@ headerObserver.observe(header);
 // Callback function for the Intersection Observer
 // It is triggered when a section enters the viewport (based on threshold)
 const revealSection = function (entries, observer) {
-  const [entry] = entries;
+  // Fixed bug: loop over all entries to handle multiple sections intersecting at once
+  // Previously, only the first entry was processed, which could miss revealing other visible sections
+  entries.forEach(entry => {
+    // Guard clause: If the section is not intersecting, exit early
+    if (!entry.isIntersecting) {
+      return;
+    }
 
-  // Guard clause: If the section is not intersecting, exit early
-  if (!entry.isIntersecting) {
-    return;
-  }
+    // Remove the 'section--hidden' class to reveal the section
+    entry.target.classList.remove('section--hidden');
 
-  // Remove the 'section--hidden' class to reveal the section
-  entry.target.classList.remove('section--hidden');
-
-  // Stop observing the section after it has been revealed
-  observer.unobserve(entry.target);
+    // Stop observing the section after it has been revealed
+    observer.unobserve(entry.target);
+  });
 };
 
 // Create the Intersection Observer
