@@ -13,6 +13,7 @@ const tabsContainer = document.querySelector('.operations__tab-container');
 const tabs = document.querySelectorAll('.operations__tab');
 const tabsContent = document.querySelectorAll('.operations__content');
 const nav = document.querySelector('.nav');
+const header = document.querySelector('.header');
 
 ///////////////////////////////////////
 // Modal window
@@ -142,20 +143,32 @@ nav.addEventListener('mouseover', handleHover.bind(0.5));
 nav.addEventListener('mouseout', handleHover.bind(1));
 
 ///////////////////////////////////////
-// Sticky navigation
+// Sticky navigation: Intersection Observer API
 
-// Get the initial position of section1 relative to the viewport
-// This value will be used as the threshold for when the navigation should become sticky
-const sec1InitialCoords = section1.getBoundingClientRect();
+// Get the height of the nav to offset the sticky trigger point
+const navHeight = nav.getBoundingClientRect().height;
 
-// Listen for scroll events on the window
-window.addEventListener('scroll', function () {
-  // Check how far the user has scrolled vertically (from top of the page)
-  // If scrolled past section1, add the 'sticky' class to the nav bar
-  if (window.scrollY > sec1InitialCoords.top) {
+// Callback function for the Intersection Observer
+// This is called whenever the header (target element) intersects the viewport (root)
+// Entries is an array of observed intersection changes (only one here)
+const stickyNav = function (entries) {
+  const [entry] = entries; // Destructure the first (and only) entry
+
+  // When the header is not intersecting the viewport, make nav sticky
+  if (!entry.isIntersecting) {
     nav.classList.add('sticky');
   } else {
-    // Remove 'sticky' class if the user scrolls back above section1
+    // Remove sticky class when header is back in view
     nav.classList.remove('sticky');
   }
-});
+};
+
+const obsOptions = {
+  root: null, // null means we observe intersection relative to the viewport
+  threshold: 0, // trigger as soon as the target is out of view
+  rootMargin: `-${navHeight}px`,
+};
+
+// Create the observer and observe the header section
+const headerObserver = new IntersectionObserver(stickyNav, obsOptions);
+headerObserver.observe(header);
