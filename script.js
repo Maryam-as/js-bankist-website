@@ -11,7 +11,8 @@ const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 ///////////////////////////////////////
 // Modal window
 
-const openModal = function () {
+const openModal = function (event) {
+  event.preventDefault(); // prevents the page to jump back to the top
   modal.classList.remove('hidden');
   overlay.classList.remove('hidden');
 };
