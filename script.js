@@ -7,6 +7,8 @@ const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.getElementById('section--1');
 
 ///////////////////////////////////////
 // Modal window
@@ -31,4 +33,19 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
     closeModal();
   }
+});
+
+///////////////////////////////////////
+// Button scrolling
+
+btnScrollTo.addEventListener('click', function () {
+  const sec1Coords = section1.getBoundingClientRect();
+
+  // Scrolls the page to the position of section1 using its coordinates relative to the viewport.
+  // Adjusts the scroll based on the current scroll position of the page (window.scrollX/Y).
+  // This ensures accurate scrolling regardless of the user's current scroll state.
+  window.scrollTo(
+    window.scrollX + sec1Coords.left,
+    window.scrollY + sec1Coords.top
+  );
 });
