@@ -39,14 +39,18 @@ document.addEventListener('keydown', function (e) {
 // Button scrolling
 
 btnScrollTo.addEventListener('click', function () {
-  const sec1Coords = section1.getBoundingClientRect();
+  // THE OLD SCHOOL WAY OF SCROLLING
+  // const sec1Coords = section1.getBoundingClientRect();
 
   // Scrolls the page to the position of section1 using its coordinates relative to the viewport.
   // Adjusts the scroll based on the current scroll position of the page (window.scrollX/Y).
   // This ensures accurate scrolling regardless of the user's current scroll state.
-  window.scrollTo({
-    left: window.scrollX + sec1Coords.left,
-    top: window.scrollY + sec1Coords.top,
-    behavior: 'smooth',
-  });
+  // window.scrollTo({
+  //   left: window.scrollX + sec1Coords.left,
+  //   top: window.scrollY + sec1Coords.top,
+  //   behavior: 'smooth',
+  // });
+
+  // THE MODERN WAY OF SCROLLING
+  section1.scrollIntoView({ behavior: 'smooth' });
 });
