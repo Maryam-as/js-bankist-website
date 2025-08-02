@@ -15,6 +15,9 @@ const tabsContent = document.querySelectorAll('.operations__content');
 const nav = document.querySelector('.nav');
 const header = document.querySelector('.header');
 const allSections = document.querySelectorAll('.section');
+const slides = document.querySelectorAll('.slide');
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
 
 ///////////////////////////////////////
 // Modal window
@@ -244,3 +247,54 @@ const imgObserver = new IntersectionObserver(loadImg, {
 
 // Start observing each lazy-load target image
 imgTargets.forEach(img => imgObserver.observe(img));
+
+///////////////////////////////////////
+// Slider
+
+// Initializes current slide index
+let currentSlide = 0;
+
+// Total number of slides - 1 (used to wrap around the last slide)
+const maxSlide = slides.length - 1;
+
+/**
+ * goToSlide(slide)
+ * Shifts all slides horizontally based on the current slide index.
+ * The slide at the given index moves into view, others are shifted off-screen.
+ * Example: if slide = 1, then:
+ *   - slide 0 -> translateX(-100%)
+ *   - slide 1 -> translateX(0%)
+ *   - slide 2 -> translateX(100%)
+ */
+const goToSlide = function (slide) {
+  slides.forEach(
+    (s, i) => (s.style.transform = `translateX(${(i - slide) * 100}%)`)
+  );
+};
+
+// Initialize slider to show the first slide
+goToSlide(0);
+
+// Next slide
+const nextSlide = function () {
+  if (currentSlide === maxSlide) {
+    currentSlide = 0;
+  } else {
+    currentSlide++;
+  }
+  goToSlide(currentSlide);
+};
+
+// Previous slide
+const prevSlide = function () {
+  if (currentSlide === 0) {
+    currentSlide = maxSlide;
+  } else {
+    currentSlide--;
+  }
+  goToSlide(currentSlide);
+};
+
+// Event listeners for next/previous navigation buttons
+btnRight.addEventListener('click', nextSlide);
+btnLeft.addEventListener('click', prevSlide);
