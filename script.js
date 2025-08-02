@@ -140,3 +140,22 @@ nav.addEventListener('mouseover', handleHover.bind(0.5));
 
 // Restore opacity when mouse leaves the link
 nav.addEventListener('mouseout', handleHover.bind(1));
+
+///////////////////////////////////////
+// Sticky navigation
+
+// Get the initial position of section1 relative to the viewport
+// This value will be used as the threshold for when the navigation should become sticky
+const sec1InitialCoords = section1.getBoundingClientRect();
+
+// Listen for scroll events on the window
+window.addEventListener('scroll', function () {
+  // Check how far the user has scrolled vertically (from top of the page)
+  // If scrolled past section1, add the 'sticky' class to the nav bar
+  if (window.scrollY > sec1InitialCoords.top) {
+    nav.classList.add('sticky');
+  } else {
+    // Remove 'sticky' class if the user scrolls back above section1
+    nav.classList.remove('sticky');
+  }
+});
