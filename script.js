@@ -208,3 +208,39 @@ allSections.forEach(section => {
   sectionObserver.observe(section);
   section.classList.add('section--hidden');
 });
+
+///////////////////////////////////////
+// Lazy loading images
+
+// Select all images with data-src attribute (low-res placeholder images)
+const imgTargets = document.querySelectorAll('img[data-src]');
+
+// Callback for Intersection Observer
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+
+  // Guard clause: exit if image is not currently in the viewport
+  if (!entry.isIntersecting) {
+    return;
+  }
+
+  // Swap the placeholder src with the actual high-res image from data-src
+  entry.target.src = entry.target.dataset.src;
+
+  // Only remove the blur effect after the image has fully loaded
+  entry.target.addEventListener('load', function () {
+    this.classList.remove('lazy-img');
+  });
+
+  // Stop observing the image once it's been handled
+  observer.unobserve(entry.target);
+};
+
+// Create the observer with a threshold of 0 (trigger as soon as the image enters the viewport)
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+});
+
+// Start observing each lazy-load target image
+imgTargets.forEach(img => imgObserver.observe(img));
