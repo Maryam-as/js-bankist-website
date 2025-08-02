@@ -58,11 +58,19 @@ btnScrollTo.addEventListener('click', function () {
 ///////////////////////////////////////
 // Page navigation
 
-document.querySelectorAll('.nav__link').forEach(link =>
-  link.addEventListener('click', function (event) {
-    event.preventDefault();
+// Event delegation:
+// 1) add event listener to common parent
+// 2) in the event handler determine which element generated the event with event.target property
 
-    const id = this.getAttribute('href');
-    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
-  })
-);
+// Page navigation using event delegation on the nav links container
+document
+  .querySelector('.nav__links')
+  .addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent default anchor link behavior (instant jump)
+
+    if (event.target.classList.contains('nav__link')) {
+      // getAttribute() gets the relative url
+      const id = event.target.getAttribute('href'); // Get target section ID from href (e.g., '#section--1')
+      document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+    }
+  });
