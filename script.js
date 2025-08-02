@@ -12,6 +12,7 @@ const section1 = document.getElementById('section--1');
 const tabsContainer = document.querySelector('.operations__tab-container');
 const tabs = document.querySelectorAll('.operations__tab');
 const tabsContent = document.querySelectorAll('.operations__content');
+const nav = document.querySelector('.nav');
 
 ///////////////////////////////////////
 // Modal window
@@ -106,4 +107,47 @@ tabsContainer.addEventListener('click', function (event) {
   document
     .querySelector(`.operations__content--${clickedTab.dataset.tab}`)
     .classList.add('operations__content--active');
+});
+
+///////////////////////////////////////
+// Menu fade animation on hover
+
+// This effect dims the opacity of sibling nav links and logo when one nav link is hovered over,
+// creating a subtle fade animation for better focus/visual feedback.
+
+// Event delegation
+nav.addEventListener('mouseover', function (event) {
+  // Use matching strategy to ensure we're targeting a nav link
+  if (event.target.classList.contains('nav__link')) {
+    const hoveredLink = event.target;
+    const siblings = hoveredLink.closest('.nav').querySelectorAll('.nav__link');
+    const logo = hoveredLink.closest('.nav').querySelector('img');
+
+    // Reduce opacity of other links
+    siblings.forEach(link => {
+      if (link !== hoveredLink) {
+        link.style.opacity = 0.5;
+      }
+    });
+
+    // Dim the logo
+    logo.style.opacity = 0.5;
+  }
+});
+
+// Restore opacity when mouse leaves the link
+nav.addEventListener('mouseout', function (event) {
+  if (event.target.classList.contains('nav__link')) {
+    const hoveredLink = event.target;
+    const siblings = hoveredLink.closest('.nav').querySelectorAll('.nav__link');
+    const logo = hoveredLink.closest('.nav').querySelector('#logo');
+
+    siblings.forEach(link => {
+      if (link !== hoveredLink) {
+        link.style.opacity = 1;
+      }
+    });
+
+    logo.style.opacity = 1;
+  }
 });
