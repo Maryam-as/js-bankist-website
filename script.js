@@ -54,3 +54,15 @@ btnScrollTo.addEventListener('click', function () {
   // THE MODERN WAY OF SCROLLING
   section1.scrollIntoView({ behavior: 'smooth' });
 });
+
+///////////////////////////////////////
+// Page navigation
+
+document.querySelectorAll('.nav__link').forEach(link =>
+  link.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    const id = this.getAttribute('href');
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  })
+);
