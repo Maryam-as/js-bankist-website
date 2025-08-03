@@ -252,91 +252,101 @@ imgTargets.forEach(img => imgObserver.observe(img));
 ///////////////////////////////////////
 // Slider
 
-// Initializes current slide index
-let currentSlide = 0;
+const slider = function () {
+  // Initializes current slide index
+  let currentSlide = 0;
 
-// Total number of slides - 1 (used to wrap around the last slide)
-const maxSlide = slides.length - 1;
+  // Total number of slides - 1 (used to wrap around the last slide)
+  const maxSlide = slides.length - 1; // maxSlide index
 
-// Dynamically create a dot for each slide and insert it into the dot container
-// Each dot gets a data-slide attribute corresponding to its slide index
-const createDots = function () {
-  slides.forEach((s, i) => {
-    dotContainer.insertAdjacentHTML(
-      'beforeend',
-      `<button class="dots__dot" data-slide="${i}"></button>`
+  // FUNCTIONS
+
+  // Dynamically create a dot for each slide and insert it into the dot container
+  // Each dot gets a data-slide attribute corresponding to its slide index
+  const createDots = function () {
+    slides.forEach((s, i) => {
+      dotContainer.insertAdjacentHTML(
+        'beforeend',
+        `<button class="dots__dot" data-slide="${i}"></button>`
+      );
+    });
+  };
+
+  const activateDot = function (slide) {
+    document
+      .querySelectorAll('.dots__dot')
+      .forEach(dot => dot.classList.remove('dots__dot--active'));
+
+    document
+      .querySelector(`.dots__dot[data-slide="${slide}"]`)
+      .classList.add('dots__dot--active');
+  };
+
+  /**
+   * goToSlide(slide)
+   * Shifts all slides horizontally based on the current slide index.
+   * The slide at the given index moves into view, others are shifted off-screen.
+   * Example: if slide = 1, then:
+   *   - slide 0 -> translateX(-100%)
+   *   - slide 1 -> translateX(0%)
+   *   - slide 2 -> translateX(100%)
+   */
+  const goToSlide = function (slide) {
+    slides.forEach(
+      (s, i) => (s.style.transform = `translateX(${(i - slide) * 100}%)`)
     );
-  });
-};
+  };
 
-const activateDot = function (slide) {
-  document
-    .querySelectorAll('.dots__dot')
-    .forEach(dot => dot.classList.remove('dots__dot--active'));
-
-  document
-    .querySelector(`.dots__dot[data-slide="${slide}"]`)
-    .classList.add('dots__dot--active');
-};
-
-/**
- * goToSlide(slide)
- * Shifts all slides horizontally based on the current slide index.
- * The slide at the given index moves into view, others are shifted off-screen.
- * Example: if slide = 1, then:
- *   - slide 0 -> translateX(-100%)
- *   - slide 1 -> translateX(0%)
- *   - slide 2 -> translateX(100%)
- */
-const goToSlide = function (slide) {
-  slides.forEach(
-    (s, i) => (s.style.transform = `translateX(${(i - slide) * 100}%)`)
-  );
-};
-
-// Initialize slider to show the first slide
-goToSlide(0);
-createDots();
-activateDot(0);
-
-// Next slide
-const nextSlide = function () {
-  if (currentSlide === maxSlide) {
-    currentSlide = 0;
-  } else {
-    currentSlide++;
-  }
-  goToSlide(currentSlide);
-  activateDot(currentSlide);
-};
-
-// Previous slide
-const prevSlide = function () {
-  if (currentSlide === 0) {
-    currentSlide = maxSlide;
-  } else {
-    currentSlide--;
-  }
-  goToSlide(currentSlide);
-  activateDot(currentSlide);
-};
-
-// Event listeners for next/previous navigation buttons
-btnRight.addEventListener('click', nextSlide);
-btnLeft.addEventListener('click', prevSlide);
-
-// Enable keyboard navigation: go to next/previous slide using arrow keys
-document.addEventListener('keydown', function (event) {
-  event.key === 'ArrowRight' && nextSlide();
-  event.key === 'ArrowLeft' && prevSlide();
-});
-
-// Event delegation
-dotContainer.addEventListener('click', function (event) {
-  // Matchin strategy
-  if (event.target.classList.contains('dots__dot')) {
-    currentSlide = Number(event.target.dataset.slide);
+  // Next slide
+  const nextSlide = function () {
+    if (currentSlide === maxSlide) {
+      currentSlide = 0;
+    } else {
+      currentSlide++;
+    }
     goToSlide(currentSlide);
     activateDot(currentSlide);
-  }
-});
+  };
+
+  // Previous slide
+  const prevSlide = function () {
+    if (currentSlide === 0) {
+      currentSlide = maxSlide;
+    } else {
+      currentSlide--;
+    }
+    goToSlide(currentSlide);
+    activateDot(currentSlide);
+  };
+
+  const init = function () {
+    // Initialize slider to show the first slide
+    goToSlide(0);
+    createDots();
+    activateDot(0);
+  };
+  init();
+
+  // EVENT HANDLERS
+
+  // Event listeners for next/previous navigation buttons
+  btnRight.addEventListener('click', nextSlide);
+  btnLeft.addEventListener('click', prevSlide);
+
+  // Enable keyboard navigation: go to next/previous slide using arrow keys
+  document.addEventListener('keydown', function (event) {
+    event.key === 'ArrowRight' && nextSlide();
+    event.key === 'ArrowLeft' && prevSlide();
+  });
+
+  // Event delegation
+  dotContainer.addEventListener('click', function (event) {
+    // Matchin strategy
+    if (event.target.classList.contains('dots__dot')) {
+      currentSlide = Number(event.target.dataset.slide);
+      goToSlide(currentSlide);
+      activateDot(currentSlide);
+    }
+  });
+};
+slider();
